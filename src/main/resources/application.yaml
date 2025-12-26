@@ -1,11 +1,6 @@
 spring:
   application:
     name: spring_opentelemetry
-
-management:
-  tracing:
-    sampling:
-      probability: 1.0
   otlp:
     metrics:
       export:
@@ -19,3 +14,16 @@ management:
       export:
         otlp:
           endpoint: http://localhost:4318/v1/logs
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+
+server:
+  shutdown: immediate
+logging:
+  level:
+    dev.danvega: INFO
+    org.springframework.boot.actuator.autoconfigure.opentelemetry: DEBUG
+    org.springframework.boot.docker.compose: DEBUG
