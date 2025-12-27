@@ -1,19 +1,21 @@
 spring:
   application:
     name: spring_opentelemetry
-  otlp:
-    metrics:
-      export:
-        url: http://localhost:4318/v1/metrics
   opentelemetry:
+    resource-attributes:
+      service.name: ${spring.application.name}
     tracing:
       export:
         otlp:
-          endpoint: http://localhost:4318/v1/traces
+          endpoint: http://localhost:4318
+    metrics:
+      export:
+        otlp:
+          endpoint: http://localhost:4318
     logging:
       export:
         otlp:
-          endpoint: http://localhost:4318/v1/logs
+          endpoint: http://localhost:4318
 
 management:
   tracing:
@@ -24,6 +26,6 @@ server:
   shutdown: immediate
 logging:
   level:
-    dev.danvega: INFO
+    com.springotel: INFO
     org.springframework.boot.actuator.autoconfigure.opentelemetry: DEBUG
     org.springframework.boot.docker.compose: DEBUG
