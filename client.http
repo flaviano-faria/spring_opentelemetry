@@ -1,0 +1,23 @@
+### RequestController - Home endpoint (root)
+GET http://localhost:8080/
+Accept: application/json
+
+###
+
+### RequestController - Welcome endpoint with path variable
+GET http://localhost:8080/welcome/John
+Accept: application/json
+
+###
+
+### RequestController - Welcome endpoint with different name
+GET http://localhost:8080/welcome/Alice
+Accept: application/json
+
+###
+
+### RequestController - Process endpoint (takes ~5 seconds)
+GET http://localhost:8080/process
+Accept: application/json
+
+###
