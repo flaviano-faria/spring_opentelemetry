@@ -16,7 +16,6 @@ spring:
       export:
         otlp:
           endpoint: http://localhost:4318
-
 management:
   tracing:
     sampling:

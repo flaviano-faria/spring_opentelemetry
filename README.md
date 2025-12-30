@@ -287,6 +287,135 @@ http://localhost:3000/a/grafana-exploretraces-app/explore?from=now-30m&to=now&va
    {job="spring_opentelemetry"}
    ```
 
+## 🔍 Useful TraceQL Queries
+
+TraceQL is the query language used by Grafana Tempo to search and filter traces. Here are some useful queries for working with your Spring Boot OpenTelemetry application:
+
+**Basic example to get all traces for your service:**
+```traceql
+{resource.service.name="spring_opentelemetry"}
+```
+
+### Basic Queries
+
+**Get all traces for your service:**
+```traceql
+{resource.service.name="spring_opentelemetry"}
+```
+
+**Get traces for a specific operation:**
+```traceql
+{resource.service.name="spring_opentelemetry" && name="http get /process"}
+```
+
+**Get traces with duration filter (longer than 1 second):**
+```traceql
+{resource.service.name="spring_opentelemetry" && duration > 1s}
+```
+
+**Get traces with status code filter:**
+```traceql
+{resource.service.name="spring_opentelemetry" && status.code = 200}
+```
+
+### Advanced Queries
+
+**Find traces with errors:**
+```traceql
+{resource.service.name="spring_opentelemetry" && status.code >= 400}
+```
+
+**Find traces by HTTP method:**
+```traceql
+{resource.service.name="spring_opentelemetry" && http.method = "GET"}
+```
+
+**Find traces by URI pattern:**
+```traceql
+{resource.service.name="spring_opentelemetry" && http.url =~ "/welcome/.*"}
+```
+
+**Combine multiple conditions:**
+```traceql
+{resource.service.name="spring_opentelemetry" && http.method = "GET" && duration > 100ms && status.code = 200}
+```
+
+**Find traces with specific outcome:**
+```traceql
+{resource.service.name="spring_opentelemetry" && http.status_code >= 200 && http.status_code < 300}
+```
+
+### Query by Attributes
+
+**Filter by custom span attributes:**
+```traceql
+{resource.service.name="spring_opentelemetry" && method = "GET"}
+```
+
+**Filter by URI:**
+```traceql
+{resource.service.name="spring_opentelemetry" && uri = "/process"}
+```
+
+**Filter by outcome:**
+```traceql
+{resource.service.name="spring_opentelemetry" && outcome = "SUCCESS"}
+```
+
+### Useful Patterns
+
+**Get the slowest traces:**
+```traceql
+{resource.service.name="spring_opentelemetry"} | duration > 5s
+```
+
+**Get traces from last 5 minutes:**
+```traceql
+{resource.service.name="spring_opentelemetry"} | now() - timestamp < 5m
+```
+
+**Find all services (no filter):**
+```traceql
+{}
+```
+
+**Find traces matching any service name pattern:**
+```traceql
+{resource.service.name =~ ".*"}
+```
+
+### TraceQL Operators
+
+- `=` - Exact match
+- `!=` - Not equal
+- `=~` - Regular expression match
+- `!~` - Regular expression not match
+- `>` - Greater than
+- `>=` - Greater than or equal
+- `<` - Less than
+- `<=` - Less than or equal
+- `&&` - Logical AND
+- `||` - Logical OR
+
+### Example Use Cases
+
+**Find slow process endpoints:**
+```traceql
+{resource.service.name="spring_opentelemetry" && name =~ ".*process.*" && duration > 3s}
+```
+
+**Find all successful requests:**
+```traceql
+{resource.service.name="spring_opentelemetry" && status.code = 200 && outcome = "SUCCESS"}
+```
+
+**Find traces by welcome endpoint:**
+```traceql
+{resource.service.name="spring_opentelemetry" && uri =~ "/welcome/.*"}
+```
+
+For more information, see the [TraceQL documentation](https://grafana.com/docs/tempo/latest/traceql/).
+
 ## 🔧 Troubleshooting
 
 ### Traces Not Appearing in Grafana
