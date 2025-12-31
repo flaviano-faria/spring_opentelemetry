@@ -616,14 +616,6 @@ spring_opentelemetry/
 3. Make your changes
 4. Submit a pull request
 
-## 📝 License
-
-[Add your license information here]
-
-## 👤 Author
-
-[Add your information here]
-
 ---
 
 **Happy Observability! 🎉**
