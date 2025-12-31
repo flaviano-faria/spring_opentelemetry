@@ -284,8 +284,101 @@ http://localhost:3000/a/grafana-exploretraces-app/explore?from=now-30m&to=now&va
 2. Select **Loki** as the data source
 3. Use LogQL query:
    ```
-   {job="spring_opentelemetry"}
+   {service_name="spring_opentelemetry"}
    ```
+
+## 🔍 Useful LogQL Queries
+
+LogQL is the query language used by Grafana Loki to search and analyze logs. Here are some useful queries for working with your Spring Boot OpenTelemetry application:
+
+### Counting Log Entries
+
+**Count occurrences of a specific string in logs:**
+
+```logql
+sum(count_over_time({service_name="spring_opentelemetry"} |= "Alice" [1h]))
+```
+
+This query counts how many times the string "Alice" appears in logs from your service in the last hour.
+
+**Query breakdown:**
+- `{service_name="spring_opentelemetry"}` - Filters logs from your service
+- `|= "Alice"` - Filters log lines containing "Alice"
+- `count_over_time(... [1h])` - Counts occurrences in the time window
+- `sum(...)` - Sums all counts to get a single total
+
+### Creating a Dashboard Panel for Log Count
+
+Follow these steps to create a dashboard panel that displays the total count:
+
+1. **Create or Edit Dashboard**
+   - Click **Dashboards** in the left sidebar
+   - Click **New** → **New Dashboard** (or edit an existing dashboard)
+
+2. **Add a New Panel**
+   - Click **Add visualization** or **Add panel**
+   - Select **loki** as the data source
+
+3. **Enter the Query**
+   - In the query editor, paste:
+     ```logql
+     sum(count_over_time({service_name="spring_opentelemetry"} |= "Alice" [1h]))
+     ```
+   - Adjust the search string (`"Alice"`) to match what you want to count
+   - Adjust the time window (`[1h]`) as needed (e.g., `[30m]`, `[6h]`, `[24h]`)
+
+4. **Set Visualization Type**
+   - In the right panel, find **Visualization** dropdown
+   - Select **"Stat"** visualization
+   - This displays a single large number showing the total count
+
+5. **Configure Panel Settings**
+   - Set panel title: "Count of Alice in Logs"
+   - Adjust time range using the dashboard time picker (top right)
+   - Customize colors, unit, and other display options as needed
+
+6. **Save the Panel**
+   - Click **Apply** (top right) to save the panel
+   - Click **Save dashboard** to save the entire dashboard
+
+**Result:** The panel displays a single number showing the total count of log entries containing "Alice" in the selected time range.
+
+### Other Useful LogQL Queries
+
+**View all logs from your service:**
+```logql
+{service_name="spring_opentelemetry"}
+```
+
+**Filter logs containing a specific string:**
+```logql
+{service_name="spring_opentelemetry"} |= "error"
+```
+
+**Filter logs with regex pattern:**
+```logql
+{service_name="spring_opentelemetry"} |~ "welcome: .*"
+```
+
+**Count logs per time interval:**
+```logql
+sum(count_over_time({service_name="spring_opentelemetry"} [5m]))
+```
+
+**Rate of log entries per second:**
+```logql
+rate({service_name="spring_opentelemetry"} [5m])
+```
+
+### LogQL Operators
+
+- `|=` - Line contains string (case-sensitive)
+- `!=` - Line does not contain string
+- `|~` - Line matches regex pattern
+- `!~` - Line does not match regex pattern
+- `{label="value"}` - Filter by label
+
+For more LogQL examples and syntax, refer to the [Loki LogQL documentation](https://grafana.com/docs/loki/latest/logql/).
 
 ## 🔍 Useful TraceQL Queries
 

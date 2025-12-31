@@ -13,19 +13,19 @@ public class RequestController {
 
     @GetMapping
     public String home(){
-        logger.trace("RequestController home");
+        logger.info("RequestController home");
         return "home";
     }
 
     @GetMapping("/welcome/{name}")
     public String welcome(@PathVariable String name){
-        logger.trace("RequestController welcome");
+        logger.info("RequestController welcome: {}", name);
         return "welcome " + name ;
     }
 
     @GetMapping("/process")
     public String process() throws InterruptedException {
-        logger.trace("RequestController process");
+        logger.info("RequestController process started");
         Thread.sleep(5000);
         logger.info("RequestController process completed");
 
