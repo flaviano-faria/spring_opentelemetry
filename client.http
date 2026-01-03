@@ -21,3 +21,51 @@ GET http://localhost:8080/process
 Accept: application/json
 
 ###
+
+### PaymentController - Create payment (PIX)
+POST http://localhost:8080/payment
+Content-Type: application/json
+
+{
+  "transactionId": "TXN-001",
+  "value": 100.50,
+  "paymentType": "PIX"
+}
+
+###
+
+### PaymentController - Create payment (Debit Card)
+POST http://localhost:8080/payment
+Content-Type: application/json
+
+{
+  "transactionId": "TXN-002",
+  "value": 250.00,
+  "paymentType": "DEBIT_CARD"
+}
+
+###
+
+### PaymentController - Create payment (PIX)
+POST http://localhost:8080/payment
+Content-Type: application/json
+
+{
+  "transactionId": "TXN-003",
+  "value": 75.25,
+  "paymentType": "PIX"
+}
+
+###
+
+### PaymentController - Create payment (Debit Card)
+POST http://localhost:8080/payment
+Content-Type: application/json
+
+{
+  "transactionId": "TXN-004",
+  "value": 1000.00,
+  "paymentType": "DEBIT_CARD"
+}
+
+###

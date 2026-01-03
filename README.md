@@ -343,6 +343,87 @@ Follow these steps to create a dashboard panel that displays the total count:
 
 **Result:** The panel displays a single number showing the total count of log entries containing "Alice" in the selected time range.
 
+### Finding Maximum Value from Logs
+
+**Extract and find the maximum payment value from log messages:**
+
+```logql
+max(
+  max_over_time(
+    {service_name="spring_opentelemetry"} 
+    |= "Payment received"
+    | regexp `value=(?P<value>[0-9.]+)`
+    | unwrap value [1h]
+  )
+)
+```
+
+This query extracts payment values from log messages and returns the maximum value.
+
+**Query breakdown:**
+- `{service_name="spring_opentelemetry"}` - Filters logs from your service
+- `|= "Payment received"` - Filters log lines containing "Payment received"
+- `| regexp \`value=(?P<value>[0-9.]+)\`` - Extracts the numeric value using regex with named capture group
+- `| unwrap value [1h]` - Converts extracted value to numeric (requires range vector `[1h]`)
+- `max_over_time(... [1h])` - Finds maximum value over the time window (returns time series)
+- `max(...)` - Aggregates the time series to get a single maximum value
+
+**Example log format:**
+```
+Payment received: Payment[transactionId=TXN-001, value=100.5, paymentType=PIX]
+```
+
+### Creating a Dashboard Panel for Maximum Payment Value
+
+Follow these steps to create a dashboard panel that displays the maximum payment value:
+
+1. **Create or Edit Dashboard**
+   - Click **Dashboards** in the left sidebar
+   - Click **New** → **New Dashboard** (or edit an existing dashboard)
+
+2. **Add a New Panel**
+   - Click **Add visualization** or **Add panel**
+   - Select **loki** as the data source
+
+3. **Enter the Query**
+   - In the query editor, paste:
+     ```logql
+     max(
+       max_over_time(
+         {service_name="spring_opentelemetry"} 
+         |= "Payment received"
+         | regexp `value=(?P<value>[0-9.]+)`
+         | unwrap value [1h]
+       )
+     )
+     ```
+   - Adjust the filter string (`"Payment received"`) to match your log format
+   - Adjust the time window (`[1h]`) as needed (e.g., `[30m]`, `[6h]`, `[24h]`)
+   - Adjust the regex pattern if your log format differs
+
+4. **Set Visualization Type**
+   - In the right panel, find **Visualization** dropdown
+   - Select **"Stat"** visualization
+   - This displays a single large number showing the maximum value
+
+5. **Configure Panel Settings**
+   - Set panel title: "Maximum Payment Value"
+   - Adjust time range using the dashboard time picker (top right)
+   - Customize colors, unit, and other display options as needed
+   - Optionally add value formatting (decimals, units, etc.)
+
+6. **Save the Panel**
+   - Click **Apply** (top right) to save the panel
+   - Click **Save dashboard** to save the entire dashboard
+
+**Result:** The panel displays a single number showing the maximum payment value extracted from log entries in the selected time range.
+
+**Important Notes:**
+- The outer `max()` is required to aggregate the time series from `max_over_time()` into a single value
+- Without the outer `max()`, you would see multiple values (one per time interval)
+- The `unwrap` function requires a range vector (time window like `[1h]`)
+- Use **Stat** visualization to display the single maximum value prominently
+
 ### Other Useful LogQL Queries
 
 **View all logs from your service:**
